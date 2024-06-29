@@ -15,24 +15,24 @@ set(OZZ_VERSION ${OZZ_VERSION_MAJOR}.${OZZ_VERSION_MINOR}.${OZZ_VERSION_PATCH})
 # Add project build options
 option(BUILD_SHARED_LIBS "Build ozz as shared libraries" OFF)
 option(ozz_build_tools "Build tools" ON)
-option(ozz_build_fbx "Build Fbx pipeline (Requires Fbx SDK)" ON)
+option(ozz_build_fbx "Build Fbx pipeline (Requires Fbx SDK)" OFF)
 option(ozz_build_gltf "Build glTF importer (Requires c++11)" ON)
 option(ozz_build_data "Build data on code change" OFF)
-option(ozz_build_samples "Build samples" ON)
-option(ozz_build_howtos "Build howtos" ON)
-option(ozz_build_tests "Build unit tests" ON)
+option(ozz_build_samples "Build samples" OFF)
+option(ozz_build_howtos "Build howtos" OFF)
+option(ozz_build_tests "Build unit tests" OFF)
 option(ozz_build_simd_ref "Force SIMD math reference implementation" OFF)
 option(ozz_build_postfix "Use per config postfix name" ON)
-option(ozz_build_msvc_rt_dll "Select msvc DLL runtime library" OFF)
+option(ozz_build_msvc_rt_dll "Select msvc DLL runtime library" ON)
 
 # Checks DLL flags
 if(WIN32 AND BUILD_SHARED_LIBS AND NOT ozz_build_msvc_rt_dll)
-  message("Forcing ozz_build_msvc_rt_dll to ON as ozz is being built as dll (BUILD_SHARED_LIBS is ON).")
-  set(ozz_build_msvc_rt_dll ON)
+   message("Forcing ozz_build_msvc_rt_dll to ON as ozz is being built as dll (BUILD_SHARED_LIBS is ON).")
+   set(ozz_build_msvc_rt_dll ON)
 endif()
 
 if(is_sub_project)
-  set(ozz_build_msvc_rt_dll ${ozz_build_msvc_rt_dll} PARENT_SCOPE)
+   set(ozz_build_msvc_rt_dll ${ozz_build_msvc_rt_dll} PARENT_SCOPE)
 endif()
 
 # Include ozz cmake parameters and scripts
@@ -52,41 +52,41 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/build-utils/cm
 
 # Detects Fbx SDK, required to build Fbx pipeline.
 if(ozz_build_tools AND ozz_build_fbx)
-  # Select a msvc runtime compatible with ozz_build_msvc_rt_dll
-  set(FBX_SHARED ${BUILD_SHARED_LIBS})
-  set(FBX_MSVC_RT_DLL ${ozz_build_msvc_rt_dll})
+   # Select a msvc runtime compatible with ozz_build_msvc_rt_dll
+   set(FBX_SHARED ${BUILD_SHARED_LIBS})
+   set(FBX_MSVC_RT_DLL ${ozz_build_msvc_rt_dll})
 
-  # Search for FBX sdk package
-  find_package(Fbx 2016)
+   # Search for FBX sdk package
+   find_package(Fbx 2016)
 
-  # Disables ozz_build_fbx if Fbx SDK isn't found.
-  if(NOT FBX_FOUND)
-    message("Fbx SDK not found, FBX tools libraries and samples will be skipped.")
-    set(ozz_build_fbx OFF)
-  endif()
+   # Disables ozz_build_fbx if Fbx SDK isn't found.
+   if(NOT FBX_FOUND)
+      message("Fbx SDK not found, FBX tools libraries and samples will be skipped.")
+      set(ozz_build_fbx OFF)
+   endif()
 
 else()
-  # Disables fbx if tools are disabled
-  set(ozz_build_fbx OFF)
+   # Disables fbx if tools are disabled
+   set(ozz_build_fbx OFF)
 endif()
 
 if(is_sub_project)
-  set(ozz_build_fbx ${ozz_build_fbx} PARENT_SCOPE)
+   set(ozz_build_fbx ${ozz_build_fbx} PARENT_SCOPE)
 endif()
 
 # gltf
 if(ozz_build_tools AND ozz_build_gltf)
 else()
-  set(ozz_build_gltf OFF)
+   set(ozz_build_gltf OFF)
 endif()
 
 if(is_sub_project)
-  set(ozz_build_gltf ${ozz_build_gltf} PARENT_SCOPE)
+   set(ozz_build_gltf ${ozz_build_gltf} PARENT_SCOPE)
 endif()
 
 # Enables unit tests.
 if(ozz_build_tests)
-  enable_testing()
+   enable_testing()
 endif()
 
 # Locates media directory.
@@ -116,21 +116,21 @@ add_subdirectory(src)
 
 # Continues with howtos
 if(ozz_build_howtos AND NOT EMSCRIPTEN)
-  add_subdirectory(howtos)
+   add_subdirectory(howtos)
 endif()
 
 # Continues with samples
 if(ozz_build_samples)
-  add_subdirectory(samples)
+   add_subdirectory(samples)
 endif()
 
 # Continues with the tests tree
 if(ozz_build_tests AND NOT EMSCRIPTEN)
-  add_subdirectory(test)
+   add_subdirectory(test)
 endif()
 
 install(FILES
-  ${PROJECT_SOURCE_DIR}/CHANGES.md
-  ${PROJECT_SOURCE_DIR}/LICENSE.md
-  ${PROJECT_SOURCE_DIR}/README.md
-  DESTINATION "share/doc/ozz-animation/")
+   ${PROJECT_SOURCE_DIR}/CHANGES.md
+   ${PROJECT_SOURCE_DIR}/LICENSE.md
+   ${PROJECT_SOURCE_DIR}/README.md
+   DESTINATION "share/doc/ozz-animation/")
